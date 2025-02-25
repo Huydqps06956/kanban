@@ -14,8 +14,14 @@ const Login = () => {
   };
   return (
     <>
-      <Card style={{ width: "60%" }}>
+      <Card>
         <div className="text-center">
+          <img
+            className="mb-3"
+            src="https://firebasestorage.googleapis.com/v0/b/kanban-7c749.firebasestorage.app/o/kanban-logo.png?alt=media&token=905dfef2-1036-45bb-bd45-4dc62aa1d306"
+            alt="kanban-logo"
+            style={{ width: "48px", height: "48px" }}
+          />
           <Title level={2}>Login in to your account</Title>
           <Paragraph type="secondary">
             Welcome back! please enter your account
@@ -69,7 +75,7 @@ const Login = () => {
         <div className="row">
           <div className="col">
             <Checkbox
-              value={isRemember}
+              checked={isRemember}
               onChange={(val) => setIsRemember(val.target.checked)}
             >
               Remember for 30 days
