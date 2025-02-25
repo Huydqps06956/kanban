@@ -1,7 +1,17 @@
-import { Card, Typography, Form, Input, Button, Checkbox, Space } from "antd";
+import {
+  Card,
+  Typography,
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  Space,
+  message,
+} from "antd";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import SocialLogin from "./components/SocialLogin";
+import handleApi from "../../apis/handleAPI";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -9,8 +19,18 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRemember, setIsRemember] = useState(false);
   const [form] = Form.useForm();
-  const handleLogin = (values: { email: string; password: string }) => {
-    console.log(values);
+  const handleLogin = async (values: { email: string; password: string }) => {
+    const api = `/auth/register`;
+    setIsLoading(true);
+    try {
+      const res = await handleApi(api, "POST", values);
+      console.log("res" + res);
+    } catch (error: any) {
+      console.log(error);
+      message.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <>
@@ -35,18 +55,6 @@ const Login = () => {
           disabled={isLoading}
           size="large"
         >
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please enter your name!",
-              },
-            ]}
-          >
-            <Input allowClear maxLength={100} type="email" />
-          </Form.Item>
           <Form.Item
             label="Email"
             name="email"
@@ -88,6 +96,7 @@ const Login = () => {
 
         <div className="mt-4 mb-3">
           <Button
+            loading={isLoading}
             onClick={() => form.submit()}
             type="primary"
             style={{ width: "100%" }}

@@ -1,15 +1,38 @@
-import { Card, Typography, Form, Input, Button, Checkbox, Space } from "antd";
+import {
+  Card,
+  Typography,
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  Space,
+  message,
+} from "antd";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import SocialLogin from "./components/SocialLogin";
+import "@ant-design/v5-patch-for-react-19";
+import handleAPI from "../../apis/handleAPI";
 
 const { Title, Paragraph, Text } = Typography;
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRemember, setIsRemember] = useState(false);
   const [form] = Form.useForm();
-  const handleLogin = (values: { email: string; password: string }) => {
-    console.log(values);
+  const handleRegister = async (values: {
+    email: string;
+    password: string;
+  }) => {
+    const api = `/auth/register`;
+    setIsLoading(true);
+    try {
+      const res = await handleAPI(api, "POST", values);
+    } catch (error: any) {
+      console.log(error);
+      message.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <>
@@ -22,10 +45,23 @@ const SignUp = () => {
         <Form
           layout="vertical"
           form={form}
-          onFinish={handleLogin}
+          onFinish={handleRegister}
           disabled={isLoading}
           size="large"
         >
+          {" "}
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Please enter your name!",
+              },
+            ]}
+          >
+            <Input allowClear maxLength={100} type="email" />
+          </Form.Item>
           <Form.Item
             label="Email"
             name="email"
