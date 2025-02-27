@@ -1,24 +1,18 @@
-import {
-  Card,
-  Typography,
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  Space,
-  message,
-} from "antd";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import SocialLogin from "./components/SocialLogin";
 import "@ant-design/v5-patch-for-react-19";
+import { Button, Card, Form, Input, Space, Typography, message } from "antd";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import handleAPI from "../../apis/handleAPI";
+import { addAuth } from "../../reduxs/reducers/authReducer";
+import SocialLogin from "./components/SocialLogin";
 
 const { Title, Paragraph, Text } = Typography;
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isRemember, setIsRemember] = useState(false);
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
+
   const handleRegister = async (values: {
     email: string;
     password: string;
@@ -26,7 +20,11 @@ const SignUp = () => {
     const api = `/auth/register`;
     setIsLoading(true);
     try {
-      const res = await handleAPI(api, "POST", values);
+      const res: any = await handleAPI(api, "post", values);
+      if (res.data) {
+        message.success(res.message);
+        dispatch(addAuth(res.data));
+      }
     } catch (error: any) {
       console.log(error);
       message.error(error.message);
@@ -36,7 +34,7 @@ const SignUp = () => {
   };
   return (
     <>
-      <Card style={{ width: "60%" }}>
+      <Card style={{ width: "100%" }}>
         <div className="text-center">
           <Title level={2}>Create an account</Title>
           <Paragraph type="secondary">Free trial 30-day free trial</Paragraph>
@@ -104,7 +102,7 @@ const SignUp = () => {
             style={{ width: "100%" }}
             size="large"
           >
-            Login
+            Sign up
           </Button>
         </div>
         <SocialLogin />

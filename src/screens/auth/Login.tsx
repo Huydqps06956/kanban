@@ -12,29 +12,34 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import SocialLogin from "./components/SocialLogin";
 import handleApi from "../../apis/handleAPI";
+import { useDispatch } from "react-redux";
+import { addAuth } from "../../reduxs/reducers/authReducer";
 
 const { Title, Paragraph, Text } = Typography;
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRemember, setIsRemember] = useState(false);
+
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
+
   const handleLogin = async (values: { email: string; password: string }) => {
-    const api = `/auth/register`;
+    const api = `/auth/login`;
     setIsLoading(true);
     try {
-      const res = await handleApi(api, "POST", values);
-      console.log("res" + res);
+      const res: any = await handleApi(api, "post", values);
+      message.success(res.message);
+      res.data && dispatch(addAuth(res.data));
     } catch (error: any) {
-      console.log(error);
-      message.error(error.message);
+      message.error(error);
     } finally {
       setIsLoading(false);
     }
   };
   return (
     <>
-      <Card>
+      <Card style={{ width: "100%" }}>
         <div className="text-center">
           <img
             className="mb-3"

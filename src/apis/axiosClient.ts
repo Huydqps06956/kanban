@@ -1,7 +1,18 @@
 import axios from "axios";
 import queryString from "query-string";
+import { localDataNames } from "../constants/appInfos";
 
-const baseURL = `http://192.168.1.6:3001`;
+const baseURL = `http://192.168.1.10:3001`;
+
+const getAssetToken = () => {
+  const res = localStorage.getItem(localDataNames.authData);
+  if (res) {
+    const auth = JSON.parse(res);
+    return auth && auth.token ? auth.token : "";
+  } else {
+    return "";
+  }
+};
 
 const axiosClient = axios.create({
   baseURL,
@@ -9,23 +20,27 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(async (config: any) => {
-  return (config.headers = {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  const accesstoken = getAssetToken();
+
+  config.headers = {
+    Authorization: accesstoken ? `Bearer ${accesstoken}` : "",
     Accept: "application/json",
     ...config.headers,
-  });
+  };
+
+  return { ...config, data: config.data ?? null };
 });
 
-axios.interceptors.response.use((res) => {
-  if (res.data && res.status >= 200 && res.status < 300) {
-    return res.data;
-  } else {
+axiosClient.interceptors.response.use(
+  (res) => {
+    if (res.data && res.status >= 200 && res.status < 300) {
+      return res.data;
+    }
     return Promise.reject(res.data);
+  },
+  (err) => {
+    return Promise.reject(err.response?.data?.message || "An error occurred");
   }
-}),
-  (err: any) => {
-    const { response } = err;
-    return Promise.reject(response.data);
-  };
+);
 
 export default axiosClient;

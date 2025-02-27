@@ -22,7 +22,7 @@ const AuthRouter = () => {
           </div>
           <Title>KANBAN</Title>
         </div>
-        <div className="col  offset-md-2 content-center">
+        <div className="col  content-center">
           <BrowserRouter>
             <Routes>
               <Route path="/login" element={<Login />} />

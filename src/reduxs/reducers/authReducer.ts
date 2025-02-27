@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { localDataNames } from "../../constants/appInfos";
 export interface AuthState {
   token: string;
   _id: string;
@@ -19,11 +20,22 @@ const authSlice = createSlice({
   reducers: {
     addAuth: (state, action) => {
       state.data = action.payload;
+      syncLocalStorage(action.payload);
+    },
+    removeAuth: (state, action) => {
+      state.data = initialState;
+      syncLocalStorage({ data: initialState });
     },
   },
 });
 
-export const authReducer = authSlice.reducer;
-export const { addAuth } = authSlice.actions;
+const syncLocalStorage = (state: { data: AuthState }) => {
+  console.log(state);
+  localStorage.setItem(localDataNames.authData, JSON.stringify(state));
+};
 
-export const authSelector = (state: any) => state.authReducer.data;
+export const authReducer = authSlice.reducer;
+export const { addAuth, removeAuth } = authSlice.actions;
+
+export const authSelector = (state: { authReducer: { data: AuthState } }) =>
+  state.authReducer.data;

@@ -23,7 +23,7 @@ function App() {
       }}
     >
       <Provider store={store}>
-        <Routers />;
+        <Routers />
       </Provider>
     </ConfigProvider>
   );
