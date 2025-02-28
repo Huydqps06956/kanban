@@ -14,6 +14,7 @@ import SocialLogin from "./components/SocialLogin";
 import handleApi from "../../apis/handleAPI";
 import { useDispatch } from "react-redux";
 import { addAuth } from "../../reduxs/reducers/authReducer";
+import { localDataNames } from "../../constants/appInfos";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -31,6 +32,9 @@ const Login = () => {
       const res: any = await handleApi(api, "post", values);
       message.success(res.message);
       res.data && dispatch(addAuth(res.data));
+      if (isRemember) {
+        localStorage.setItem(localDataNames.authData, JSON.stringify(res.data));
+      }
     } catch (error: any) {
       message.error(error);
     } finally {
@@ -45,7 +49,7 @@ const Login = () => {
             className="mb-3"
             src="https://firebasestorage.googleapis.com/v0/b/kanban-7c749.firebasestorage.app/o/kanban-logo.png?alt=media&token=905dfef2-1036-45bb-bd45-4dc62aa1d306"
             alt="kanban-logo"
-            style={{ width: "48px", height: "48px" }}
+            style={{ width: "48px", height: "auto" }}
           />
           <Title level={2}>Login in to your account</Title>
           <Paragraph type="secondary">
@@ -110,7 +114,7 @@ const Login = () => {
             Login
           </Button>
         </div>
-        <SocialLogin />
+        <SocialLogin isRemember={isRemember} />
         <div className="mt-4 text-center">
           <Space>
             <Text>Don't have an account?</Text>
