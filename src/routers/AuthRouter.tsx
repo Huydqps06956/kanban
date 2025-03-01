@@ -1,7 +1,8 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SignUp from "../screens/auth/SignUp";
-import Login from "../screens/auth/Login";
 import { Typography } from "antd";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { appInfo } from "../constants/appInfos";
+import Login from "../screens/auth/Login";
+import SignUp from "../screens/auth/SignUp";
 
 const { Title } = Typography;
 
@@ -16,7 +17,7 @@ const AuthRouter = () => {
           <div className="mb-4">
             <img
               style={{ width: 256, objectFit: "cover" }}
-              src="https://firebasestorage.googleapis.com/v0/b/kanban-7c749.firebasestorage.app/o/kanban-logo.png?alt=media&token=905dfef2-1036-45bb-bd45-4dc62aa1d306"
+              src={appInfo.logo}
               alt="kanban-logo"
             />
           </div>

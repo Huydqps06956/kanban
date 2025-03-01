@@ -26,6 +26,7 @@ const Routers = () => {
     getData();
   }, []);
 
+  const handleCheckToken = async () => {};
   return isLoading ? <Spin /> : !auth.token ? <AuthRouter /> : <MainRouter />;
 };
 

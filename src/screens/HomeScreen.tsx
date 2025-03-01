@@ -1,17 +1,45 @@
 import { Button } from "antd";
 import React from "react";
-import { useDispatch } from "react-redux";
-import { removeAuth } from "../reduxs/reducers/authReducer";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  authSelector,
+  refreshToken,
+  removeAuth,
+} from "../reduxs/reducers/authReducer";
+import handleAPI from "../apis/handleAPI";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
 
+  const auth = useSelector(authSelector);
   const logout = () => {
     dispatch(removeAuth({}));
   };
+
+  const getProducts = async () => {
+    const api = `storage/products`;
+    try {
+      const res = await handleAPI(api);
+    } catch (error) {
+      if (error === "jwt expired") {
+        handleRefreshToken();
+      }
+    }
+  };
+
+  const handleRefreshToken = async () => {
+    const api = `auth/refresh-token?id=${auth._id}`;
+    try {
+      const res = await handleAPI(api);
+      dispatch(refreshToken(res.data));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div>
-      <Button onClick={logout}>Log out</Button>
+      <Button onClick={getProducts}>Log out</Button>
     </div>
   );
 };

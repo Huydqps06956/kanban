@@ -4,7 +4,7 @@ import { localDataNames } from "../constants/appInfos";
 
 const baseURL = `http://192.168.1.9:3001`;
 
-const getAssetToken = () => {
+const getAccessToken = () => {
   const res = localStorage.getItem(localDataNames.authData);
   if (res) {
     const auth = JSON.parse(res);
@@ -20,7 +20,7 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(async (config: any) => {
-  const accesstoken = getAssetToken();
+  const accesstoken = getAccessToken();
 
   config.headers = {
     Authorization: accesstoken ? `Bearer ${accesstoken}` : "",
